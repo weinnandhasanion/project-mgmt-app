@@ -1,6 +1,9 @@
+import store from "store";
+
 export interface AuthObject {
   user: UserObject | null;
   token: string | null;
+  loading: boolean;
 }
 
 export interface UserObject {
@@ -23,3 +26,6 @@ export interface Task {
 }
 
 export type StringMap = { [k: string]: string };
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

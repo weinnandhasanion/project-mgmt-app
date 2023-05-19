@@ -6,11 +6,14 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { logUser } from "components/modules/authThunk";
 import { useFormik } from "formik";
-import { StringMap } from "types";
+import { useDispatch } from "react-redux";
+import { AppDispatch, StringMap } from "types";
 import { loginPage } from "util/fields";
 
 export const LoginForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { fields } = loginPage;
 
   const getInitialValues = () => ({
@@ -21,7 +24,7 @@ export const LoginForm = () => {
   const formik = useFormik({
     initialValues: getInitialValues() as StringMap,
     onSubmit: (values) => {
-      console.log(values);
+      dispatch(logUser(values));
     },
   });
 

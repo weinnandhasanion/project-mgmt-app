@@ -12,3 +12,14 @@ authRouter.get("/", (_, res) => {
     token: "sample token 123",
   });
 });
+
+authRouter.post("/", (req, res) => {
+  res.json({
+    user: {
+      id: 123,
+      username: req.body.username,
+      givenName: "Tsuki",
+    },
+    token: "123",
+  });
+});
