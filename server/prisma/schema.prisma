@@ -9,3 +9,53 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  firstName     String
+  lastName      String
+  email         String         @unique
+  password      String
+  projects      UserProjects[]
+  tasksAssigned Task[]         @relation(name: "userTasksAssigned")
+  tasks         Task[]         @relation(name: "userTasks")
+  ownedProjects Project[]
+}
+
+model Project {
+  id          Int            @id @default(autoincrement())
+  name        String
+  description String
+  startDate   DateTime
+  endDate     DateTime
+  tasks       Task[]
+  users       UserProjects[]
+  owner       User           @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+}
+
+model UserProjects {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  project   Project  @relation(fields: [projectId], references: [id])
+  projectId Int
+  createdAt DateTime
+
+  @@id([userId, projectId])
+}
+
+model Task {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  estimate    Int
+  project     Project  @relation(fields: [projectId], references: [id])
+  projectId   Int
+  assignee    User?    @relation(name: "userTasks", fields: [assigneeId], references: [id])
+  assigneeId  Int?
+  assignor    User     @relation(name: "userTasksAssigned", fields: [assignorId], references: [id])
+  assignorId  Int
+  createdBy   Int
+  assignedAt  DateTime
+}

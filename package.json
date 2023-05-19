@@ -11,7 +11,8 @@
   "author": "Weinnand Hasanion",
   "license": "MIT",
   "scripts": {
-    "start": "concurrently \"yarn workspace frontend dev\" \"yarn workspace server start\""
+    "start": "concurrently \"yarn workspace frontend dev\" \"yarn workspace server start\"",
+    "db:migrate": "yarn workspace server migrate"
   },
   "devDependencies": {
     "@types/node": "^20.2.1",
