@@ -1,7 +1,8 @@
 import { Home } from "components/Home";
 import { Login } from "components/Login";
+import { Signup } from "components/Signup";
 import { NonIndexRouteObject } from "react-router-dom";
-import { HOME, LOGIN } from "util/constants";
+import { HOME, LOGIN, SIGNUP } from "util/constants";
 
 export const routes: RouteObj[] = [
   {
@@ -13,6 +14,11 @@ export const routes: RouteObj[] = [
     path: "/login",
     element: <Login />,
     linkName: LOGIN,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+    linkName: SIGNUP,
   },
 ];
 

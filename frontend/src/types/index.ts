@@ -1,12 +1,13 @@
 import store from "store";
 
 export interface AuthObject {
-  user: UserObject | null;
+  user: User | null;
   token: string | null;
   loading: boolean;
+  error: { [key: string]: string } | undefined;
 }
 
-export interface UserObject {
+export interface User {
   id: string;
   username: string;
   givenName: string;
@@ -14,6 +15,7 @@ export interface UserObject {
 
 export interface Project {
   name: string;
+  description: string;
   tasks: Task[];
 }
 
@@ -21,8 +23,8 @@ export interface Task {
   name: string;
   description: string;
   estimate: number;
-  startDate: typeof Date;
-  endDate: typeof Date;
+  assignedBy: string;
+  assignedAt: string;
 }
 
 export type StringMap = { [k: string]: string };

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { API_BASE_URL } from "env-config";
 
 const instance = axios.create({
@@ -15,6 +15,11 @@ export const get = async (url: string) => {
   return instance.get(url);
 };
 
-export const post = async <D>(url: string, data: D) => {
-  return instance.post(url, data);
+export const post = async <D>(url: string, data: D, hasCredentials = false) => {
+  const options: AxiosRequestConfig = {
+    headers: {
+      "x-access-token": hasCredentials ? "sampletoken123" : undefined,
+    },
+  };
+  return instance.post(url, data, options);
 };
