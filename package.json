@@ -1,0 +1,25 @@
+{
+  "name": "project-mgmt-app",
+  "workspaces": [
+    "frontend",
+    "server"
+  ],
+  "private": true,
+  "version": "1.0.0",
+  "description": "A simple project management app using React Typescript + Vite, Express, and MySQL.",
+  "main": "index.js",
+  "author": "Weinnand Hasanion",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"yarn workspace frontend dev\" \"yarn workspace server start\""
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.1",
+    "typescript": "^5.0.2",
+    "ts-node": "^10.9.1",
+    "eslint": "^8.38.0",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "concurrently": "^8.0.1"
+  }
+}
