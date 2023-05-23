@@ -6,15 +6,25 @@ import {
   Button,
   TextField,
 } from "@mui/material";
+import { resetErrors } from "components/modules/authReducer";
 import { logUser } from "components/modules/authThunk";
 import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { AppDispatch, StringMap } from "types";
+import { AppDispatch, RootState, StringMap } from "types";
 import { loginPage } from "util/fields";
 
 export const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const { error } = useSelector((state: RootState) => state.auth);
   const { fields } = loginPage;
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetErrors());
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const getInitialValues = () => ({
     username: "",
@@ -27,6 +37,8 @@ export const LoginForm = () => {
       dispatch(logUser(values));
     },
   });
+
+  const hasError = (name: string) => error && Object.keys(error).includes(name);
 
   const renderFields = () => {
     return fields.map((field) => (
@@ -42,6 +54,8 @@ export const LoginForm = () => {
         sx={{ marginBlockStart: 2 }}
         onChange={formik.handleChange}
         value={formik.values[field.name]}
+        error={hasError(field.name)}
+        helperText={error && error[field.name]}
       />
     ));
   };

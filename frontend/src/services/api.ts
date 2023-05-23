@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { API_BASE_URL } from "env-config";
+import { getLocalStorageToken } from "util/util";
 
 const instance = axios.create({
   baseURL: API_BASE_URL,
@@ -8,6 +9,7 @@ const instance = axios.create({
     Accept: "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Accept",
+    Authorization: getLocalStorageToken(),
   },
 });
 

@@ -1,76 +1,55 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { verifyTokenMiddleware } from "../middleware/jwt";
+import { verifyToken } from "../middleware/jwt";
 import { prisma } from "../db";
 import { AUTH_SECRET_KEY } from "../config";
+import { validateSignup } from "../middleware/validation/signup";
+import { validateLogin } from "../middleware/validation/login";
 
 export const authRouter = express.Router();
 
-authRouter.get("/", (_, res) => {
-  res.json({
-    user: {
-      id: 123,
-      username: "johndoe123",
-      givenName: "John Doe",
-    },
-    token: "sample token 123",
-  });
+const transformUserObj = (user: any) => ({
+  id: user.id,
+  username: user.username,
+  givenName: `${user.firstName} ${user.lastName}`,
 });
 
-authRouter.post("/login", verifyTokenMiddleware, (req, res) => {
-  res.json({
-    user: {
-      id: 123,
-      username: req.body.username,
-      givenName: "Tsuki",
-    },
-    token: "123",
-  });
-});
-
-authRouter.post("/signup", async (req, res) => {
-  const { email, username, firstName, lastName, password } = req.body;
-  const emailExists = await prisma.user.findUnique({
+authRouter.get("/me", verifyToken, async (req: any, res) => {
+  const user = await prisma.user.findUnique({
     where: {
-      email,
+      id: req.id,
     },
   });
 
-  const usernameExists = await prisma.user.findUnique({
-    where: { username },
-  });
+  res.status(200).json({ user: transformUserObj(user) });
+});
 
-  const errorObj: { [key: string]: string } = {};
+authRouter.post("/login", validateLogin, (req: any, res) => {
+  const user = req.user;
 
-  if (emailExists) {
-    errorObj["email"] = "Email already exists. Please choose another email.";
+  if (user) {
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      AUTH_SECRET_KEY
+    );
+
+    res.status(200).json({ user: transformUserObj(user), token });
   }
+});
 
-  if (usernameExists) {
-    errorObj["username"] = "Username is taken.";
-  }
-
-  if (Object.keys(errorObj).length > 0) {
-    res.status(500).json({ errors: errorObj });
-    return;
-  }
+authRouter.post("/signup", validateSignup, async (req, res) => {
+  const { email, username, firstName, lastName, password } = req.body;
 
   const user = await prisma.user.create({
     data: { username, email, firstName, lastName, password },
   });
 
   if (user) {
-    const userObj = {
-      id: user.id,
-      username: user.username,
-      givenName: `${user.firstName} ${user.lastName}`,
-    };
-
     const token = jwt.sign(
       { id: user.id, username: user.username },
       AUTH_SECRET_KEY
     );
 
-    res.status(200).json({ user: userObj, token });
+    res.status(200).json({ user: transformUserObj(user), token });
   }
 });

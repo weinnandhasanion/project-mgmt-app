@@ -6,27 +6,18 @@ import {
   CardContent,
   Typography,
   CardActions,
-  Button,
   TextField,
 } from "@mui/material";
 import { signUpUser } from "components/modules/authThunk";
 import { signupPage } from "util/fields";
 import { resetErrors } from "components/modules/authReducer";
 import { AppDispatch, RootState, StringMap } from "types";
+import { LoadingButton } from "@mui/lab";
 
 export const SignupForm = () => {
-  const { error } = useSelector((state: RootState) => state.auth);
+  const { error, loading } = useSelector((state: RootState) => state.auth);
   const dispatch = useDispatch<AppDispatch>();
   const { fields } = signupPage;
-
-  useEffect(() => {
-    console.log("mounted");
-
-    return () => {
-      console.log("unmounted");
-      dispatch(resetErrors());
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const initialFormikValues = {
     username: "",
@@ -40,9 +31,16 @@ export const SignupForm = () => {
   const formik = useFormik({
     initialValues: initialFormikValues,
     onSubmit: (values) => {
+      dispatch(resetErrors());
       dispatch(signUpUser(values));
     },
   });
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetErrors());
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const hasError = (name: string) => error && Object.keys(error).includes(name);
 
@@ -76,9 +74,12 @@ export const SignupForm = () => {
           {renderFields()}
         </CardContent>
         <CardActions>
-          <Button type="submit" variant="contained">
+          {/* <Button type="submit" variant="contained">
             Submit
-          </Button>
+          </Button> */}
+          <LoadingButton type="submit" variant="contained" loading={loading}>
+            Submit
+          </LoadingButton>
         </CardActions>
       </Card>
     </form>
