@@ -20,6 +20,7 @@ import { APPBAR_TITLE } from "util/constants";
 import { RouteObj, routes } from "routes";
 import { logoutUser } from "components/modules/authReducer";
 import { RootState } from "types";
+import { enqueueSnackbar } from "notistack";
 
 export const Header = () => {
   const { user } = useSelector((state: RootState) => state.auth);
@@ -31,6 +32,7 @@ export const Header = () => {
   const handleLogout = () => {
     setOpen(false);
     dispatch(logoutUser());
+    enqueueSnackbar("Logout successful", { variant: "success" });
   };
 
   const renderLink = (route: RouteObj) => {

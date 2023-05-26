@@ -1,11 +1,16 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { enqueueSnackbar } from "notistack";
 import { get, post } from "services/api";
 import { StringMap, User } from "types";
 
 export const getUser = createAsyncThunk<User>("auth/me", async () => {
-  const response = await get("/auth/me");
+  try {
+    const response = await get("/auth/me");
 
-  return response.data;
+    return response.data;
+  } catch (error: any) {
+    enqueueSnackbar(error.message, { variant: "error" });
+  }
 });
 
 export const logUser = createAsyncThunk<User, StringMap>(
@@ -18,8 +23,15 @@ export const logUser = createAsyncThunk<User, StringMap>(
 
       localStorage.setItem("token", token);
 
+      enqueueSnackbar("Login successful", { variant: "success" });
+
       return user;
     } catch (error: any) {
+      if (error.response.data.errors) {
+        for (const err of Object.values(error.response.data.errors)) {
+          enqueueSnackbar(err as string, { variant: "error" });
+        }
+      }
       return thunkAPI.rejectWithValue(error.response.data.errors);
     }
   }
@@ -35,8 +47,11 @@ export const signUpUser = createAsyncThunk<User, StringMap>(
 
       localStorage.setItem("token", token);
 
+      enqueueSnackbar("Signup successful", { variant: "success" });
+
       return user;
     } catch (error: any) {
+      enqueueSnackbar(error.message, { variant: "error" });
       return thunkAPI.rejectWithValue(error.response.data.errors);
     }
   }
