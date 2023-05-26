@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import {
   Card,
@@ -11,12 +10,13 @@ import {
 import { signUpUser } from "components/modules/authThunk";
 import { signupPage } from "util/fields";
 import { resetErrors } from "components/modules/authReducer";
-import { AppDispatch, RootState, StringMap } from "types";
+import { StringMap } from "types";
 import { LoadingButton } from "@mui/lab";
+import { useAppDispatch, useAppSelector } from "hooks";
 
 export const SignupForm = () => {
-  const { error, loading } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch<AppDispatch>();
+  const { error, loading } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const { fields } = signupPage;
 
   const initialFormikValues = {

@@ -1,11 +1,10 @@
 import { Container } from "@mui/material";
 import { LoginForm } from "./LoginForm";
 import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "types";
+import { useAppSelector } from "hooks";
 
 export const Login = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useAppSelector((state) => state.auth);
 
   if (user) {
     return <Navigate to="/" />;

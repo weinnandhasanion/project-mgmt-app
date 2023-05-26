@@ -9,15 +9,14 @@ import {
 import { resetErrors } from "components/modules/authReducer";
 import { logUser } from "components/modules/authThunk";
 import { useFormik } from "formik";
+import { useAppDispatch, useAppSelector } from "hooks";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
-import { AppDispatch, RootState, StringMap } from "types";
+import { StringMap } from "types";
 import { loginPage } from "util/fields";
 
 export const LoginForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { error } = useSelector((state: RootState) => state.auth);
+  const dispatch = useAppDispatch();
+  const { error } = useAppSelector((state) => state.auth);
   const { fields } = loginPage;
 
   useEffect(() => {

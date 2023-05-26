@@ -1,16 +1,17 @@
 import { getUser } from "components/modules/authThunk";
-import { useLayoutEffect } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "types";
+import { useAppSelector, useAppDispatch } from "hooks";
+import { useEffect } from "react";
 import { checkIfTokenExists } from "util/util";
 
-export const useAuthRefresh = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const hasToken = checkIfTokenExists();
+export const useAuth = () => {
+  const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
-  useLayoutEffect(() => {
-    if (hasToken) {
-      dispatch(getUser());
+  useEffect(() => {
+    if (!user) {
+      if (checkIfTokenExists()) {
+        dispatch(getUser());
+      }
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [user]);
 };

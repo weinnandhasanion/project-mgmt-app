@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, To } from "react-router-dom";
 import {
   AppBar,
@@ -19,12 +18,12 @@ import { Menu } from "@mui/icons-material";
 import { APPBAR_TITLE } from "util/constants";
 import { RouteObj, routes } from "routes";
 import { logoutUser } from "components/modules/authReducer";
-import { RootState } from "types";
 import { enqueueSnackbar } from "notistack";
+import { useAppDispatch, useAppSelector } from "hooks";
 
 export const Header = () => {
-  const { user } = useSelector((state: RootState) => state.auth);
-  const dispatch = useDispatch();
+  const { user } = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
 
   const openLogoutAlert = () => setOpen(true);
