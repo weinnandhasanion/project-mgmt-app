@@ -1,5 +1,6 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { API_BASE_URL } from "env-config";
+import { ApiGet, ApiPost } from "types";
 import { getLocalStorageToken } from "util/util";
 
 const instance = axios.create({
@@ -13,15 +14,10 @@ const instance = axios.create({
   },
 });
 
-export const get = async (url: string) => {
+export const get: ApiGet = async (url: string) => {
   return instance.get(url);
 };
 
-export const post = async <D>(url: string, data: D, hasCredentials = false) => {
-  const options: AxiosRequestConfig = {
-    headers: {
-      "x-access-token": hasCredentials ? "sampletoken123" : undefined,
-    },
-  };
-  return instance.post(url, data, options);
+export const post: ApiPost = async (url, data) => {
+  return instance.post(url, data);
 };

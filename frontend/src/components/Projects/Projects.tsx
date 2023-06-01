@@ -1,5 +1,21 @@
-import { Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const Projects = () => {
-  return <Typography variant="h2">Projects</Typography>;
+  const navigate = useNavigate();
+
+  return (
+    <Box>
+      <Typography variant="h2">Projects</Typography>
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={() => navigate("/projects/create")}
+        >
+          Add new project
+        </Button>
+      </Box>
+    </Box>
+  );
 };

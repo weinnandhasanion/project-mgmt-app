@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AuthObject, StringMap } from "types";
-import { getUser, logUser, signUpUser } from "./authThunk";
+import { logUser, signUpUser } from "./authThunk";
 
 const initialState: AuthObject = {
   user: null,
@@ -13,7 +13,12 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+    persistUser: (state, action) => {
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+    },
     logoutUser: () => {
+      localStorage.removeItem("user");
       localStorage.removeItem("token");
       return initialState;
     },
@@ -28,7 +33,8 @@ const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(logUser.fulfilled, (state, action) => {
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
         state.loading = false;
       })
       .addCase(logUser.rejected, (state, action) => {
@@ -41,26 +47,15 @@ const authSlice = createSlice({
       })
       .addCase(signUpUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload;
+        state.user = action.payload.user;
+        state.token = action.payload.token;
       })
       .addCase(signUpUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as StringMap;
-      })
-      // refresh user actions
-      .addCase(getUser.pending, (state) => {
-        state.loading = true;
-      })
-      .addCase(getUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.user = action.payload;
-      })
-      .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as StringMap;
       }),
 });
 
-export const { logoutUser, resetErrors } = authSlice.actions;
+export const { persistUser, logoutUser, resetErrors } = authSlice.actions;
 
 export const { reducer: authReducer } = authSlice;

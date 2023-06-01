@@ -1,6 +1,7 @@
 import { Home } from "components/Home";
 import { Login } from "components/Login";
 import { Projects } from "components/Projects";
+import { CreateProject } from "components/Projects/CreateProject";
 import { ProtectedRoute } from "components/shared/ProtectedRoute";
 import { Signup } from "components/Signup";
 import { NonIndexRouteObject } from "react-router-dom";
@@ -18,6 +19,10 @@ export const routes: RouteObj[] = [
     element: <ProtectedRoute component={Projects} />,
     linkName: PROJECTS,
     routeType: "protected",
+  },
+  {
+    path: "/projects/create",
+    element: <ProtectedRoute component={CreateProject} />,
   },
   {
     path: "/login",

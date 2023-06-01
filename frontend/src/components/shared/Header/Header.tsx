@@ -68,7 +68,9 @@ export const Header = () => {
     }
   };
 
-  const renderLinks = routes.map((route) => renderLink(route));
+  const renderLinks = routes.map(
+    (route) => route.linkName && renderLink(route)
+  );
 
   return (
     <>
